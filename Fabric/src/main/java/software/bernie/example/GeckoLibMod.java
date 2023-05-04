@@ -1,17 +1,29 @@
 package software.bernie.example;
 
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import software.bernie.example.item.GeckoArmorItem;
 import software.bernie.example.registry.BlockEntityRegistry;
 import software.bernie.example.registry.BlockRegistry;
 import software.bernie.example.registry.EntityRegistry;
 import software.bernie.example.registry.ItemRegistry;
 import software.bernie.example.registry.SoundRegistry;
 import software.bernie.geckolib.GeckoLib;
+import software.bernie.geckolib.animatable.GeoItem;
+import software.bernie.geckolib.core.object.PlayState;
+
+import java.util.Set;
 
 public final class GeckoLibMod implements ModInitializer {
 
@@ -33,6 +45,34 @@ public final class GeckoLibMod implements ModInitializer {
 
 		new BlockRegistry();
 		new SoundRegistry();
+
+		registerEvents();
+	}
+
+	private void registerEvents() {
+ 		UseBlockCallback.EVENT.register((player, world, hand, hitResult) -> {
+			if (!world.isClientSide) {
+				Set<Item> wornArmor = new ObjectOpenHashSet<>();
+
+				for (ItemStack stack : player.getArmorSlots()) {
+					wornArmor.add(stack.getItem());
+				}
+
+				// Check each of the pieces match our set
+				boolean isFullSet = wornArmor.containsAll(ObjectArrayList.of(
+						ItemRegistry.GECKO_ARMOR_BOOTS,
+						ItemRegistry.GECKO_ARMOR_LEGGINGS,
+						ItemRegistry.GECKO_ARMOR_CHESTPLATE,
+						ItemRegistry.GECKO_ARMOR_HELMET));
+
+				if (isFullSet) {
+					ItemStack chestPiece = player.getInventory().armor.get(1);
+					GeckoArmorItem geckoArmorItem = (GeckoArmorItem) chestPiece.getItem();
+					geckoArmorItem.triggerAnim(player, GeoItem.getOrAssignId(chestPiece, (ServerLevel)world), "slam_controller", "slam");
+				}
+			}
+			return InteractionResult.PASS;
+		});
 	}
 
 	private void registerEntityAttributes() {

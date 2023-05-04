@@ -14,6 +14,7 @@ import net.minecraft.world.item.ItemStack;
 import software.bernie.example.client.renderer.armor.GeckoArmorRenderer;
 import software.bernie.example.registry.ItemRegistry;
 import software.bernie.geckolib.animatable.GeoItem;
+import software.bernie.geckolib.animatable.SingletonGeoAnimatable;
 import software.bernie.geckolib.animatable.client.RenderProvider;
 import software.bernie.geckolib.constant.DataTickets;
 import software.bernie.geckolib.constant.DefaultAnimations;
@@ -39,6 +40,10 @@ public final class GeckoArmorItem extends ArmorItem implements GeoItem {
 
 	public GeckoArmorItem(ArmorMaterial armorMaterial, ArmorItem.Type type, Properties properties) {
 		super(armorMaterial, type, properties);
+
+		// Register our item as server-side handled.
+		// This enables both animation data syncing and server-side animation triggering
+		SingletonGeoAnimatable.registerSyncedAnimatable(this);
 	}
 
 	// Create our armor model/renderer for Fabric and return it
@@ -69,6 +74,8 @@ public final class GeckoArmorItem extends ArmorItem implements GeoItem {
 	// Let's add our animation controller
 	@Override
 	public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
+		controllers.add(new AnimationController<>(this, "slam_controller", state -> PlayState.CONTINUE)
+				.triggerableAnim("slam", DefaultAnimations.ATTACK_SLAM));
 		controllers.add(new AnimationController<>(this, 20, state -> {
 			// Apply our generic idle animation.
 			// Whether it plays or not is decided down below.
