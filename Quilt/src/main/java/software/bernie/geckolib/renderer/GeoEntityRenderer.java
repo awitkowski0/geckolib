@@ -326,7 +326,7 @@ public class GeoEntityRenderer<T extends Entity & GeoAnimatable> extends EntityR
 				name = ChatFormatting.stripFormatting(name);
 			}
 
-			if (name != null && (name.equals("Dinnerbone") || name.equalsIgnoreCase("Grumm"))) {
+			if (name != null && ("Dinnerbone".equals(name) || "Grumm".equalsIgnoreCase(name))) {
 				poseStack.translate(0, animatable.getBbHeight() + 0.1f, 0);
 				poseStack.mulPose(Axis.ZP.rotationDegrees(180f));
 			}

@@ -366,7 +366,7 @@ public class GeoReplacedEntityRenderer<E extends Entity, T extends GeoAnimatable
 				name = ChatFormatting.stripFormatting(name);
 			}
 
-			if (name != null && (name.equals("Dinnerbone") || name.equalsIgnoreCase("Grumm"))) {
+			if (name != null && ("Dinnerbone".equals(name) || "Grumm".equalsIgnoreCase(name))) {
 				poseStack.translate(0, this.currentEntity.getBbHeight() + 0.1f, 0);
 				poseStack.mulPose(Axis.ZP.rotationDegrees(180f));
 			}
