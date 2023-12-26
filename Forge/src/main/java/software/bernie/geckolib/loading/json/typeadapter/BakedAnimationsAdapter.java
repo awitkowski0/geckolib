@@ -139,7 +139,7 @@ public class BakedAnimationsAdapter implements JsonDeserializer<BakedAnimations>
 			String key = entry.getFirst();
 			JsonElement element = entry.getSecond();
 
-			if (key.equals("easing") || key.equals("easingArgs") || key.equals("lerp_mode"))
+			if ("easing".equals(key) || "easingArgs".equals(key) || "lerp_mode".equals(key))
 				continue;
 
 			double prevTime = prevEntry != null ? Double.parseDouble(prevEntry.getFirst()) : 0;

@@ -266,6 +266,6 @@ public class MolangParser extends MathBuilder {
 	 */
 	@Override
 	protected boolean isOperator(String s) {
-		return super.isOperator(s) || s.equals("=");
+		return super.isOperator(s) || "=".equals(s);
 	}
 }

@@ -25,6 +25,6 @@ public class FakeGlassRenderer extends DynamicGeoEntityRenderer<FakeGlassEntity>
 	@Nullable
 	@Override
 	protected ResourceLocation getTextureOverrideForBone(GeoBone bone, FakeGlassEntity animatable, float partialTick) {
-		return bone.getName().equals("outer_glass") ? WHITE_STAINED_GLASS_TEXTURE : null;
+		return "outer_glass".equals(bone.getName()) ? WHITE_STAINED_GLASS_TEXTURE : null;
 	}
 }
